@@ -1,73 +1,53 @@
-# React + TypeScript + Vite
+# 📋 Kanban Task Board
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, feature-rich Kanban board application built with React, TypeScript, and Tailwind CSS. Manage your tasks efficiently with drag-and-drop functionality and persistent storage.
 
-Currently, two official plugins are available:
+![Kanban Board](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-06B6D4?style=for-the-badge&logo=tailwindcss)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+### Core Functionality
+- 🎯 **Drag & Drop** - Intuitive task movement between columns
+- ✏️ **CRUD Operations** - Create, read, update, and delete tasks
+- 💾 **LocalStorage Persistence** - Tasks saved automatically
+- 🔍 **Real-time Search** - Instant task filtering
+- 🎨 **Priority Levels** - High, Medium, Low with color coding
+- 🏷️ **Tags & Categories** - Organize tasks with custom tags
+- 📅 **Due Dates** - Set deadlines with overdue warnings
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Advanced Features
+- ⌨️ **Keyboard Shortcuts** - Quick actions (Ctrl+N, Ctrl+K, ?)
+- 📊 **Statistics Dashboard** - Track completion rates and progress
+- 🔽 **Filter & Sort** - Filter by priority, sort by date/priority/title
+- 📱 **Responsive Design** - Works on mobile, tablet, and desktop
+- 🎭 **Smooth Animations** - Beautiful transitions and effects
+- 🌓 **Empty States** - Helpful placeholders for empty columns
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Frontend
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Tailwind CSS v4** - Utility-first styling
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Libraries
+- **@dnd-kit** - Drag and drop functionality
+  - `@dnd-kit/core` - Core drag and drop
+  - `@dnd-kit/sortable` - Sortable lists
+  - `@dnd-kit/utilities` - Helper utilities
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### State Management
+- **React Context API** - Global state management
+- **Custom Hooks** - Reusable logic (useTasks, useLocalStorage, useKeyboardShortcuts)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Storage
+- **LocalStorage** - Client-side data persistence
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
+- Node.js 16+ and npm/yarn
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```

@@ -23,14 +23,37 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   const daysUntilDue = getDaysUntilDue(task.dueDate);
   const overdue = isOverdue(task.dueDate);
 
+  const handleClick = (e: React.MouseEvent) => {
+    // Prevent click when dragging
+    if (isDragging) {
+      e.preventDefault();
+      return;
+    }
+    onClick();
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isDragging) {
+      onEdit(e);
+    }
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isDragging) {
+      onDelete(e);
+    }
+  };
+
   return (
     <div
-      onClick={onClick}
+      onClick={handleClick}
       className={`
         bg-white rounded-lg p-4 shadow-sm border border-gray-200
         hover:shadow-md hover:border-gray-300 
-        transition-all duration-200 cursor-pointer
-        ${isDragging ? 'opacity-50 rotate-2 scale-105' : 'opacity-100'}
+        transition-all duration-200
+        ${isDragging ? 'opacity-50 shadow-2xl ring-2 ring-blue-400' : 'opacity-100 cursor-pointer'}
         group
       `}
     >
@@ -41,26 +64,28 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         </Badge>
 
         {/* Action Buttons */}
-        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={onEdit}
-            className="p-1.5 hover:bg-blue-50 rounded text-blue-600 transition-colors"
-            title="Edit task"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </button>
-          <button
-            onClick={onDelete}
-            className="p-1.5 hover:bg-red-50 rounded text-red-600 transition-colors"
-            title="Delete task"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        </div>
+        {!isDragging && (
+          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={handleEdit}
+              className="p-1.5 hover:bg-blue-50 rounded text-blue-600 transition-colors"
+              title="Edit task"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+            <button
+              onClick={handleDelete}
+              className="p-1.5 hover:bg-red-50 rounded text-red-600 transition-colors"
+              title="Delete task"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Task Title */}

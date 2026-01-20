@@ -2,9 +2,8 @@ import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Task, TaskStatus } from '../../types';
-
-import { COLUMN_BG_COLORS, COLUMN_COLORS } from '../../constants';
 import { SortableTaskCard } from './sortableTaskCard';
+import { COLUMN_BG_COLORS, COLUMN_COLORS } from '../../constants';
 
 interface ColumnProps {
   id: TaskStatus;
@@ -57,17 +56,21 @@ export const Column: React.FC<ColumnProps> = ({
           ${COLUMN_BG_COLORS[id]}
           min-h-[500px]
           transition-all duration-200
-          ${isOver ? 'bg-opacity-50 ring-2 ring-blue-400 ring-opacity-50' : ''}
+          ${isOver ? 'bg-opacity-70 ring-4 ring-blue-300 ring-opacity-50 scale-[1.02]' : ''}
         `}
       >
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           {tasks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+            <div className={`
+              flex flex-col items-center justify-center py-16 text-gray-400
+              ${isOver ? 'scale-110' : ''}
+              transition-transform duration-200
+            `}>
               <svg className="w-16 h-16 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
               <p className="text-sm font-medium">No tasks</p>
-              <p className="text-xs mt-1">Drag tasks here</p>
+              <p className="text-xs mt-1">Drop tasks here</p>
             </div>
           ) : (
             tasks.map((task) => (

@@ -9,8 +9,8 @@ import {
   useSensor,
   useSensors,
   closestCorners,
+  closestCenter,
 } from '@dnd-kit/core';
-
 import { Task, TaskStatus } from '../../types';
 import { Column } from './Column';
 import { TaskCard } from '../Task';
@@ -61,12 +61,25 @@ export const Board: React.FC<BoardProps> = ({
     const activeTask = tasks.find((t) => t.id === activeId);
     if (!activeTask) return;
 
-    // Check if we're over a column
-    const overColumn = COLUMNS.find((col) => col.id === overId);
+    // Check if we're hovering over a column (not a task)
+    const isOverColumn = COLUMNS.some((col) => col.id === overId);
     
-    if (overColumn && activeTask.status !== overColumn.id) {
-      // Moving to a different column
-      onTaskMove(activeId, overColumn.id);
+    if (isOverColumn) {
+      const newStatus = overId as TaskStatus;
+      if (activeTask.status !== newStatus) {
+        onTaskMove(activeId, newStatus);
+      }
+      return;
+    }
+
+    // Check if we're hovering over a task
+    const overTask = tasks.find((t) => t.id === overId);
+    
+    if (overTask) {
+      // If hovering over a task in a different column, move to that column
+      if (activeTask.status !== overTask.status) {
+        onTaskMove(activeId, overTask.status);
+      }
     }
   };
 
@@ -80,29 +93,30 @@ export const Board: React.FC<BoardProps> = ({
     const activeId = active.id as string;
     const overId = over.id as string;
 
-    // Find tasks
     const activeTask = tasks.find((t) => t.id === activeId);
-    const overTask = tasks.find((t) => t.id === overId);
-
     if (!activeTask) return;
 
-    // If dropped on a different task in the same column, reorder
-    if (overTask && activeTask.status === overTask.status) {
-      const activeIndex = tasks.findIndex((t) => t.id === activeId);
-      const overIndex = tasks.findIndex((t) => t.id === overId);
-
-      if (activeIndex !== overIndex) {
-        // Here you would handle reordering within the same column
-        // For now, we'll just update the status
-        onTaskMove(activeId, activeTask.status);
-      }
-    }
-
     // Check if dropped on a column
-    const overColumn = COLUMNS.find((col) => col.id === overId);
-    if (overColumn && activeTask.status !== overColumn.id) {
-      onTaskMove(activeId, overColumn.id);
+    const isOverColumn = COLUMNS.some((col) => col.id === overId);
+    
+    if (isOverColumn) {
+      const newStatus = overId as TaskStatus;
+      if (activeTask.status !== newStatus) {
+        onTaskMove(activeId, newStatus);
+      }
+      return;
     }
+
+    // Check if dropped on a task
+    const overTask = tasks.find((t) => t.id === overId);
+    
+    if (overTask && activeTask.status !== overTask.status) {
+      onTaskMove(activeId, overTask.status);
+    }
+  };
+
+  const handleDragCancel = () => {
+    setActiveTask(null);
   };
 
   const getTasksByStatus = (status: TaskStatus): Task[] => {
@@ -112,10 +126,11 @@ export const Board: React.FC<BoardProps> = ({
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {COLUMNS.map((column) => (
@@ -133,9 +148,12 @@ export const Board: React.FC<BoardProps> = ({
       </div>
 
       {/* Drag Overlay */}
-      <DragOverlay>
+      <DragOverlay dropAnimation={{
+        duration: 200,
+        easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+      }}>
         {activeTask ? (
-          <div className="rotate-3 scale-105">
+          <div className="rotate-3 scale-105 cursor-grabbing">
             <TaskCard
               task={activeTask}
               onClick={() => {}}

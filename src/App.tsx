@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { TaskProvider } from './context';
-import { useTasks, useKeyboardShortcuts } from './hooks';
+import { useTasks } from './hooks';
 import { 
   PageLayout, 
   Header, 
@@ -10,7 +10,7 @@ import {
 } from './components/Layout';
 import { Board } from './components/Board';
 import { TaskModal, TaskForm } from './components/Task';
-import { Modal, Button } from './components/common';
+import { Modal } from './components/common';
 import { Task, TaskPriority } from './types';
 
 const KanbanApp: React.FC = () => {
@@ -22,34 +22,9 @@ const KanbanApp: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | 'all'>('all');
   const [sortBy, setSortBy] = useState<'date' | 'priority' | 'title'>('date');
-  const searchInputRef = useRef<HTMLInputElement>(null);
+ 
 
-  // Keyboard shortcuts
-  useKeyboardShortcuts([
-    {
-      key: 'n',
-      ctrlKey: true,
-      callback: () => setIsAddModalOpen(true),
-      description: 'Create new task',
-    },
-    {
-      key: 'k',
-      ctrlKey: true,
-      callback: () => searchInputRef.current?.focus(),
-      description: 'Focus search',
-    },
-    {
-      key: '/',
-      ctrlKey: true,
-      callback: () => setIsShortcutsOpen(true),
-      description: 'Show shortcuts',
-    },
-    {
-      key: '?',
-      callback: () => setIsShortcutsOpen(true),
-      description: 'Show shortcuts',
-    },
-  ]);
+
 
   // Filter and sort tasks
   const filteredAndSortedTasks = React.useMemo(() => {
@@ -152,32 +127,7 @@ const KanbanApp: React.FC = () => {
         />
       </div>
 
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-8 right-8 flex flex-col gap-3">
-        <Button
-          variant="secondary"
-          size="lg"
-          onClick={() => setIsShortcutsOpen(true)}
-          className="rounded-full w-14 h-14 shadow-xl hover:shadow-2xl"
-          title="Keyboard shortcuts (?)"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </Button>
-
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={handleAddTask}
-          className="rounded-full w-14 h-14 shadow-xl hover:shadow-2xl"
-          title="Add task (Ctrl+N)"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-        </Button>
-      </div>
+  
 
       {/* Add Task Modal */}
       <Modal
@@ -218,9 +168,7 @@ const KanbanApp: React.FC = () => {
           </svg>
           <span className="font-medium">Built with React + TypeScript + Tailwind CSS</span>
         </div>
-        <p className="text-sm text-gray-500">
-          Press <kbd className="px-2 py-1 text-xs bg-gray-100 border border-gray-300 rounded">?</kbd> for keyboard shortcuts
-        </p>
+     
       </footer>
     </PageLayout>
   );
