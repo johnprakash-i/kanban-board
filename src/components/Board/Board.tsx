@@ -8,7 +8,6 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  closestCorners,
   closestCenter,
 } from '@dnd-kit/core';
 import { Task, TaskStatus } from '../../types';
